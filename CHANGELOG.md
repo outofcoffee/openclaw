@@ -4,6 +4,10 @@ Docs: https://docs.openclaw.ai
 
 ## Unreleased
 
+### Breaking
+
+- Active Memory: the memory-core default blocking recall tool allowlist is now `memory_search` and `memory_get` only. Existing configs that select `memory-lancedb` via `plugins.slots.memory` keep using `memory_recall` automatically; custom memory plugins that need other tools must set `plugins.entries.active-memory.config.toolsAllow`.
+
 ### Changes
 
 - Runtime/install: raise the supported Node 22 floor to `22.16+` so native SQLite query handling can rely on the `node:sqlite` statement metadata API while continuing to recommend Node 24. (#78921)
@@ -46,6 +50,7 @@ Docs: https://docs.openclaw.ai
 - Google Meet: preserve `realtime.introMessage: ""` so realtime Chrome joins can stay silent instead of restoring the default spoken intro. Thanks @vincentkoc.
 - CLI/migrate: add bulk on/off and skip controls to interactive Codex skill migration, leaving conflicting skill copies unchecked by default. (#77597) Thanks @kevinslin.
 - OpenAI/Codex media: advertise Codex audio transcription in runtime and manifest metadata and route active Codex chat models to the OpenAI transcription default instead of sending chat model ids to audio transcription. Thanks @vincentkoc.
+- Plugins/active-memory: add `config.toolsAllow` so the blocking recall subagent can use custom memory-provider tools, make the default prompt list the resolved tools instead of hardcoding memory-core/LanceDB fallback rules, and degrade missing or failed recall tools to empty memory so the main reply continues.
 - Models/auth: add `openclaw models auth list [--provider <id>] [--json]` so users can inspect saved per-agent auth profiles without dumping secrets or hitting the old “too many arguments” path. Thanks @vincentkoc.
 - Cron CLI: add `openclaw cron list --agent <id>`, normalize the requested agent id, and include jobs without a stored agent id under the configured default agent while keeping `cron list` unfiltered when no agent is supplied. Fixes #77118. Thanks @zhanggttry.
 - Status: show compact Gateway process uptime and host system uptime in `/status`, making restart and host-lifetime checks visible from chat. Thanks @vincentkoc.
